@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id='title'>IvtCraft</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body id="mainBody">
+    <div id="main-wrap" class="wrap">
+        <div class="wrap-content">
+            <!--Заголовок-->
+            <h id="logoText">
+                IvtCraft
+            </h>
+        </div>
+        <hr color="black" noshade>
+        <!--Баттонпад-->
+        <div id="button-pad" class="div-selector">
+            <a href='#' class="header-btn" onclick="show('current')">Текущий</a>
+            <a href='#' class="header-btn" onclick="show('packages')">Доступные сборки</a>
+        </div>
+        <hr color="black" noshade>
+        <!--Контент-->
+        <h1 id="cnv-hdr" class='canvas-header'></h1>
+        <div id="main-canvas" class="page-content">
+        <!--Driven by script. Main by default-->
+    </div>
+    <script src="axios.min.js"></script>
+    <script src="main.js"></script>
+</body>
+    <!--Низ страницы-->
+<footer class="bottom">
+    <hr color="black" noshade>
+    <p class="cp-text">
+        RGN! (c)2021
+    <p class='canvas-header' id='ip-string'></p>
+    </p>
+</footer>
+</html>

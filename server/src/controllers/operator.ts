@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 import Srv from '../services/srv';
 import consts from '../const/var';
+import java from '../services/java';
 
 class Operator {
     async getServerDirs(req : Request, res : Response): Promise < void > {
@@ -12,12 +13,20 @@ class Operator {
     }
     async setServer(req : Request, res : Response): Promise < void > { // Установка сервера для операций
         try {
-            if ((await Srv.fetchServerDirs()).includes(req.body.Name)) {
-                consts.selectedServer = req.body.Name;
+            if ((await Srv.fetchServerDirs()).includes(req.query.Name as string)) {
+                consts.selectedServer = req.query.Name as string;
+                res.send("OK");
             } else {
-                throw new Error("No such server in directory!");
+                res.send("Probably, server directory was not found!");
             }
         } catch (err) {
+            res.json(err);
+        }
+    }
+    async startServer(req : Request, res : Response): Promise < void > {
+        try {
+            res.json(await java.startProc());
+        } catch(err) {
             res.json(err);
         }
     }

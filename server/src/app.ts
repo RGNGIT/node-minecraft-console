@@ -1,11 +1,8 @@
 import express from 'express';
-import selector from './services/srv';
 import Server from './server';
 
 require('dotenv').config();
 const app = express();
-
-
 
 (async function () {
     await Server.main(app);
