@@ -30,6 +30,13 @@ class Operator {
             res.json(err);
         }
     }
+    async submitCommand(req : Request, res : Response): Promise < void > {
+        try {
+            res.json(await Srv.sendCommand(req.params.cmd));
+        } catch(err) {
+            res.json(err);
+        }
+    }
 }
 
 export default new Operator();

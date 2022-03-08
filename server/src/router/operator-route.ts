@@ -7,5 +7,6 @@ const router = Router();
 router.get(SERVER.GET_SERVER_DIRS, Operator.getServerDirs);
 router.patch(SERVER.SET_SERVER, Operator.setServer);
 router.get(SERVER.START_SERVER, Operator.startServer);
+router.get(SERVER.SUBMIT_COMMAND, Operator.submitCommand);
 
 export default router;

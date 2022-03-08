@@ -22,6 +22,9 @@ class Srv {
             (fs.existsSync(`${path}\\mods`) ? 'mods' : 'plugins')
         }`) : null;
     }
+    async sendCommand(command) {
+        singleton.proc.stdin.write(command);
+    }
 }
 
 export default new Srv();

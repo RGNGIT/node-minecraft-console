@@ -82,6 +82,7 @@ z-index: 9999;
     width: 100%;
     transform: translateX(-3px);
     resize: vertical;
+    height: 600px;
 }
 
 .stat-table {

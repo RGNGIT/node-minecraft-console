@@ -6,5 +6,6 @@ export default {
     GET_AVAILABLE_SERVER_LIST: '/serverList',
     GET_SERVER_ICON: '/serverIcon/:name',
     GET_SERVER_STATUS: '/status',
-    GET_SERVER_LOG: '/log'
+    GET_SERVER_LOG: '/log',
+    SUBMIT_COMMAND: '/cmd/:cmd'
 }
