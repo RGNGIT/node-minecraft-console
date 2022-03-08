@@ -1,4 +1,4 @@
-import consts from './const/var';
+import singleton from './const/var';
 import {buildRoutes} from './router/index';
 import path from 'path';
 import express from 'express';
@@ -16,7 +16,7 @@ class Server {
         app.use(cors(corsOpt));
     }
     async defineConsts() {
-        consts.root = __dirname;
+        singleton.root = __dirname;
     }
     async main(app) {
         await this.defineMiddlewares(app);

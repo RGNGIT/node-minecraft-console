@@ -1,12 +1,18 @@
 import {Request, Response} from 'express';
 import Srv from '../services/srv';
-import consts from '../const/var';
+import singleton from '../const/var';
 import StaticData from '../services/static';
+import {status} from 'minecraft-server-util';
+
+const mc_options = {
+    timeout: 1000 * 5,
+    enableSRV: true
+}
 
 class ServerData {
     async getCurrentNMCConfig(req : Request, res : Response): Promise < void > {
         try {
-            res.json(consts);
+            res.json(singleton);
         } catch (err) {
             res.json(err);
         }
@@ -15,7 +21,7 @@ class ServerData {
         try {
             let array = [];
             for (let server of await Srv.fetchServerDirs()) {
-                array.push({Name: server, Meta: await Srv.fetchServerMeta(server)});
+                array.push({Name: server, Meta: await Srv.fetchServerMeta(server), Mods: await Srv.fetchModifications(server)});
             }
             res.json(array);
         } catch (err) {
@@ -27,6 +33,20 @@ class ServerData {
             res.set('Content-Type', 'image/png');
             res.send(await StaticData.getServerIcon(req.params.name));
         } catch (err) {
+            res.json(err);
+        }
+    }
+    async getActiveServerData(req : Request, res : Response): Promise < void > {
+        try {
+            res.json(await status(process.env.ADDR, 25565, mc_options));
+        } catch (err) {
+            res.json(err);
+        }
+    }
+    async getServerLog(req : Request, res : Response): Promise < void > {
+        try {
+            res.json({Log:singleton.log});
+        } catch(err) {
             res.json(err);
         }
     }

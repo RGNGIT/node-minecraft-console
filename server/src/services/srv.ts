@@ -1,14 +1,26 @@
 import fs from 'fs';
-import consts from '../const/var';
+import singleton from '../const/var';
 
 class Srv {
     async fetchServerDirs(): Promise < Array < string >> {
-        let dir = await fs.readdirSync(`${consts.root}\\java`);
+        let dir = await fs.readdirSync(`${
+            singleton.root
+        }\\java`);
         return dir;
     }
     async fetchServerMeta(dir) {
-        let meta = await fs.readFileSync(`${consts.root}\\java\\${dir}\\meta`);
+        let meta = await fs.readFileSync(`${
+            singleton.root
+        }\\java\\${dir}\\meta`);
         return JSON.parse(meta.toString());
+    }
+    async fetchModifications(dir) {
+        const path = `${
+            singleton.root
+        }\\java\\${dir}`;
+        return fs.existsSync(`${path}\\mods`) || fs.existsSync(`${path}\\plugins`) ? fs.readdirSync(`${path}\\${
+            (fs.existsSync(`${path}\\mods`) ? 'mods' : 'plugins')
+        }`) : null;
     }
 }
 
