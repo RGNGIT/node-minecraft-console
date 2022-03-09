@@ -52,7 +52,8 @@ class ServerData {
     }
     async uploadServer(req, res : Response): Promise < void > {
         try {
-            res.json(await StaticData.writeServer(req.files.server, req.params.name, req.query.ver, req.files.icon, req.query.eula));
+            await StaticData.writeServer(req.files.server, req.params.name, req.query.ver, req.files.icon, req.query.eula);
+            res.json('OK');
         } catch (err) {
             res.json(err);
         }

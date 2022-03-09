@@ -1,5 +1,6 @@
 import singleton from '../const/var';
 import fs from 'fs';
+import sharp from 'sharp';
 
 class StaticData {
     async getServerIcon(dir) {
@@ -9,23 +10,38 @@ class StaticData {
         return fs.existsSync(path) ? Buffer.from(fs.readFileSync(path)).toString('base64') : null;
     }
     async writeServer(server, name, ver, icon, eula) {
-        const path = `${singleton.root}\\java\\${name}`;
-        return new Promise(async (res, rej) => {
-            await fs.mkdir(path, async () => {
-                await fs.writeFile(`${path}\\eula.txt`, `eula=${eula}`, (err) => {
-                    rej(err);
+        const path = `${
+            singleton.root
+        }\\java\\${name}`;
+        return new Promise((res, rej) => {
+            fs.mkdir(path, async () => {
+                let writeEula = new Promise((res1, rej1) => {
+                    fs.writeFile(`${path}\\eula.txt`, `eula=${eula}`, (err) => {
+                        err ? rej1(err) : res1('OK');
+                    });
                 });
-                await fs.writeFile(`${path}\\server-icon.png`, icon.data, (err) => {
-                    rej(err);
+                let writeIcon = new Promise((res2, rej2) => {
+                    fs.writeFile(`${path}\\server-icon-raw.png`, icon.data, (err) => {
+                        sharp(`${path}\\server-icon-raw.png`)
+                        .resize(64, 64)
+                        .toFile(`${path}\\server-icon.png`);
+                        err ? rej2(err) : res2('OK'); 
+                    });
+                }); 
+                let writeMeta = new Promise((res3, rej3) => {
+                    fs.writeFile(`${path}\\meta`, `{"Version":"${ver}", "MD5":"${
+                        server.md5
+                    }"}`, (err) => {
+                        err ? rej3(err) : res3('OK');
+                    });
+                }); 
+                let writeServer = new Promise((res4, rej4) => {
+                    fs.writeFile(`${path}\\server.jar`, server.data, (err) => {
+                        err ? rej4(err) : res4('OK');
+                    });
                 });
-                await fs.writeFile(`${path}\\meta`, `{"Version":"${ver}", "MD5":"${server.md5}"}`, (err) => {
-                    rej(err);
-                });
-                await fs.writeFile(`${path}\\server.jar`, server.data, (err) => {
-                    rej(err);
-                });
+                res(await Promise.allSettled([writeEula, writeIcon, writeMeta, writeServer]));
             });
-            res("OK");
         });
     }
 }
