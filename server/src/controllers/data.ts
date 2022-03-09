@@ -50,6 +50,13 @@ class ServerData {
             res.json(err);
         }
     }
+    async uploadServer(req : Request, res : Response): Promise < void > {
+        try {
+            console.log(req.body);
+        } catch(err) {
+
+        }
+    }
 }
 
 export default new ServerData();

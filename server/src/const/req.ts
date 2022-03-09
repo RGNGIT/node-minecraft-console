@@ -7,5 +7,7 @@ export default {
     GET_SERVER_ICON: '/serverIcon/:name',
     GET_SERVER_STATUS: '/status',
     GET_SERVER_LOG: '/log',
-    SUBMIT_COMMAND: '/cmd/:cmd'
+    SUBMIT_COMMAND: '/cmd/:cmd',
+    POST_SERVER: '/uploadServer/:name',
+    
 }

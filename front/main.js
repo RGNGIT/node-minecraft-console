@@ -55,6 +55,11 @@ margin-right: auto;' src="${icon}"></img>
 <input id='command' type='text' style='width: 100%; transform: translateX(-3px);'></input>
 </div>`;
 
+const uploadTemplate = () => `<dir>
+<input type='file' id='sfile'>Загрузить сборку</input>
+<button onclick='uploadServer()'>Выгрузить</button>
+</dir>`;
+
 async function getLog() {
     return await axios.get(server + 'api/log');
 }
@@ -73,6 +78,7 @@ async function showCurrent() {
 
 async function showAvailable() {
     let list = await axios.get(server + `api/serverList`);
+    canvas.innerHTML += uploadTemplate();
     for (let i = 0; i < list.data.length; i++) {
         let image = await axios.get(server + `api/serverIcon/${
             list.data[i].Name
@@ -80,6 +86,18 @@ async function showAvailable() {
         console.log(image);
         canvas.innerHTML += availableTemplate(i, list.data[i].Name, list.data[i].Meta, image.data, list.data[i].Mods);
     }
+}
+
+async function uploadServer() {
+    let fd = new FormData();
+    let sfile = document.querySelector("#sfile");
+    fd.append("server", sfile.files[0]);
+    console.log(fd);
+    await axios.post(server + 'api/uploadServer/lol', fd, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
 }
 
 async function setServer(dir) {

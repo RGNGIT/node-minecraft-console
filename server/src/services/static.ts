@@ -8,6 +8,9 @@ class StaticData {
         }\\java\\${dir}\\server-icon.png`;
         return fs.existsSync(path) ? Buffer.from(fs.readFileSync(path)).toString('base64') : null;
     }
+    async packServer(file, ver) {
+        
+    }
 }
 
 export default new StaticData();
