@@ -20,7 +20,9 @@ const availableTemplate = (id, name, meta, img, mods) => `<div>
 ${
     id == 0 ? '' : '<hr color="black" noshade>'
 }
-<h2 class='a-server-name'>${name}</h2>
+<h2 class='a-server-name'>${name} (${
+    meta.MD5
+})</h2>
 <img class="a-server-img" src="data:image/png;base64, ${img}"></img>
 <h3>Версия: ${
     meta.Version
@@ -56,8 +58,11 @@ margin-right: auto;' src="${icon}"></img>
 </div>`;
 
 const uploadTemplate = () => `<dir>
-<input type='file' id='sfile'>Загрузить сборку</input>
-<button onclick='uploadServer()'>Выгрузить</button>
+<input type='text' id='server-name' placeholder='Имя сервера'></input>
+<input type='text' id='server-version' placeholder='Версия сервера'></input>
+<input type='file' id='sfile'></input>
+<input type='file' id='spic'></input>
+<button onclick='uploadServer()'>Выгрузить сборку</button>
 </dir>`;
 
 async function getLog() {
@@ -79,6 +84,9 @@ async function showCurrent() {
 async function showAvailable() {
     let list = await axios.get(server + `api/serverList`);
     canvas.innerHTML += uploadTemplate();
+    if (list.data.length == 0) {
+        canvas.innerHTML += "<h2 style='text-align:center;'>Нет доступных сборок</h2>";
+    }
     for (let i = 0; i < list.data.length; i++) {
         let image = await axios.get(server + `api/serverIcon/${
             list.data[i].Name
@@ -91,13 +99,17 @@ async function showAvailable() {
 async function uploadServer() {
     let fd = new FormData();
     let sfile = document.querySelector("#sfile");
+    let pfile = document.querySelector("#spic");
+    let name = document.querySelector("#server-name").value;
+    let ver = document.querySelector("#server-version").value;
     fd.append("server", sfile.files[0]);
-    console.log(fd);
-    await axios.post(server + 'api/uploadServer/lol', fd, {
+    fd.append("icon", pfile.files[0]);
+    let res = await axios.post(server + `api/uploadServer/${name}?ver=${ver}&eula=true`, fd, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
     });
+    res.data == 'OK' ? show('packages') : console.log("Error");
 }
 
 async function setServer(dir) {
@@ -145,7 +157,6 @@ async function show(param) {
     switch (param) {
         case "current": canvas.innerHTML = "<h1 style='text-align:center;'>Текущий сервер</h1>";
             await showCurrent();
-            await writeLog();
             break;
         case "packages": canvas.innerHTML = "<h1 style='text-align:center;'>Сборки</h1>";
             await showAvailable();

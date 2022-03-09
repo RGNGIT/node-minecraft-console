@@ -27,10 +27,10 @@ class Java {
         }`);
         singleton.proc = spawn('java', [
             '-jar', `${
-                singleton.root
-            }\\java\\${
+                singleton.root.replaceAll('\\', '/')
+            }/java/${
                 singleton.selectedServer
-            }\\server.jar`,
+            }/server.jar`,
             'nogui'
         ]);
         return await this.logger(singleton.proc);

@@ -45,16 +45,16 @@ class ServerData {
     }
     async getServerLog(req : Request, res : Response): Promise < void > {
         try {
-            res.json({Log:singleton.log});
-        } catch(err) {
+            res.json({Log: singleton.log});
+        } catch (err) {
             res.json(err);
         }
     }
-    async uploadServer(req : Request, res : Response): Promise < void > {
+    async uploadServer(req, res : Response): Promise < void > {
         try {
-            console.log(req.body);
-        } catch(err) {
-
+            res.json(await StaticData.writeServer(req.files.server, req.params.name, req.query.ver, req.files.icon, req.query.eula));
+        } catch (err) {
+            res.json(err);
         }
     }
 }
