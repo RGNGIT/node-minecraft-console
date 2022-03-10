@@ -31,6 +31,7 @@ ${
     mods != null ? enlistMods(mods) : 'Отсутствуют (Ванилла)'
 }</h3>
 <button value=${name} onclick='startServer(value)'>Запустить</button>
+<button value=${name} onclick='deleteServer(value)'>Удалить</button>
 </div>`;
 
 const currentTemplate = (version, players, motd, icon) => `<div>
@@ -62,6 +63,7 @@ const uploadTemplate = () => `<dir>
 <input type='text' id='server-version' placeholder='Версия сервера'></input>
 <input type='file' id='sfile'></input>
 <input type='file' id='spic'></input>
+<input type='file' id='smodify'></input>
 <button onclick='uploadServer()'>Выгрузить сборку</button>
 </dir>`;
 
@@ -79,6 +81,19 @@ async function showCurrent() {
         await setCommandLine();
         updater = setInterval(writeLog, 1000);
     }
+}
+
+async function deleteServer(dir) {
+    let res = await axios.delete(server + `api/delete/${dir}`);
+    console.log(res.data);
+    res.data == 'OK' ? show('packages') : console.log("Error");
+}
+
+async function uploadModifications(dir) {
+    let fd = new FormData();
+    let smodify = document.querySelector("#smodify");
+    fd.append('package', smodify.files[0]);
+    await axios.post(server + `api/uploadModifications/${dir}`, fd);
 }
 
 async function showAvailable() {

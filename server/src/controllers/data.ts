@@ -58,6 +58,20 @@ class ServerData {
             res.json(err);
         }
     }
+    async deleteServer(req : Request, res : Response): Promise < void > {
+        try {
+            res.json(await StaticData.deleteServer(req.params.name));
+        } catch(err) {
+            res.json(err);
+        }
+    }
+    async uploadModifications(req, res : Response): Promise < void > {
+        try {
+            await this.uploadModifications(req.params.dir, req.files.package);
+        } catch(err) {
+            res.json(err);
+        }
+    }
 }
 
 export default new ServerData();

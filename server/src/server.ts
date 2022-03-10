@@ -13,7 +13,7 @@ const corsOpt = {
 
 class Server {
     async defineMiddlewares(app) {
-        app.use(express.static(path.join(__dirname, '../../front')));
+        app.use(express.static(path.join(__dirname, process.env.DEV === 'true' ? '../../dev-front' : '../../front')));
         app.use(cors(corsOpt));
         app.use(FileUpload());
     }

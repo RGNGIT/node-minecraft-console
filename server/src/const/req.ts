@@ -9,5 +9,6 @@ export default {
     GET_SERVER_LOG: '/log',
     SUBMIT_COMMAND: '/cmd/:cmd',
     POST_SERVER: '/uploadServer/:name',
-    
+    DELETE_SERVER: '/delete/:name',
+    UPLOAD_MODIFICATIONS: '/uploadModifications/:dir'
 }
