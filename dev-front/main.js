@@ -32,6 +32,8 @@ ${
 }</h3>
 <button value=${name} onclick='startServer(value)'>Запустить</button>
 <button value=${name} onclick='deleteServer(value)'>Удалить</button>
+<input type='file' id='${name}-modify'></input>
+<button value=${name} onclick='addModifications(value, "plugin")'>Добавить пак модификаций</button>
 </div>`;
 
 const currentTemplate = (version, players, motd, icon) => `<div>
@@ -83,17 +85,27 @@ async function showCurrent() {
     }
 }
 
+async function addModifications(dir, mode) {
+    let fd = new FormData();
+    let smodify = document.querySelector(`#${dir}-modify`);
+    fd.append('package', smodify.files[0]);
+    let res = await axios.post(server + `api/uploadModifications/${dir}?type=${mode}`, fd);
+    res.data == 'OK' ? show('packages') : console.log("Error");
+}
+
 async function deleteServer(dir) {
     let res = await axios.delete(server + `api/delete/${dir}`);
     console.log(res.data);
     res.data == 'OK' ? show('packages') : console.log("Error");
 }
 
-async function uploadModifications(dir) {
+async function uploadModifications(dir, mode) {
     let fd = new FormData();
     let smodify = document.querySelector("#smodify");
     fd.append('package', smodify.files[0]);
-    await axios.post(server + `api/uploadModifications/${dir}`, fd);
+    if(smodify.files[0] != null) {
+    await axios.post(server + `api/uploadModifications/${dir}?type=${mode}`, fd);
+    }
 }
 
 async function showAvailable() {
@@ -124,6 +136,7 @@ async function uploadServer() {
             'Content-Type': 'multipart/form-data'
         }
     });
+    await uploadModifications(name, 'plugin');
     res.data == 'OK' ? show('packages') : console.log("Error");
 }
 

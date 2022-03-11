@@ -1,7 +1,7 @@
 import singleton from '../const/var';
 import fs from 'fs';
 import sharp from 'sharp';
-import unzip from 'unzip';
+import unzipper from 'unzipper';
 
 class StaticData {
     async getServerIcon(dir) {
@@ -23,7 +23,9 @@ class StaticData {
                 });
                 let writeIcon = new Promise((res2, rej2) => {
                     fs.writeFile(`${path}\\server-icon.raw`, icon.data, (err) => {
-                        sharp(`${path}\\server-icon.raw`).resize(64, 64).toFile(`${path}\\server-icon.png`);
+                        sharp(`${path}\\server-icon.raw`)
+                        .resize(64, 64)
+                        .toFile(`${path}\\server-icon.png`);
                         err ? rej2(err) : res2('OK');
                     });
                 });
@@ -43,17 +45,27 @@ class StaticData {
             });
         });
     }
-    async writePlugins(dir, pluginZip) {
+    async writeModifications(dir, zip, type) {
         const path = `${
             singleton.root
         }\\java\\${dir}`;
-        return new Promise((res, rej) => {
-            fs.mkdir(`${path}\\plugins`, (err) => {
-                fs.writeFile(`${path}\\plugin-package`, pluginZip.package, (err) => {
-                    fs.createReadStream(`${path}\\plugin-package`)
-                    .pipe(unzip.Extract({path: `${path}\\plugins`}));
+        function write(res, rej) {
+            fs.writeFile(`${path}\\${type}-package`, zip.package.data, (err) => {
+                let rstream = fs.createReadStream(`${path}\\${type}-package`)
+                .pipe(unzipper.Extract({path: `${path}\\${type}s`}));
+                rstream.on('finish', () => {
+                    res('OK');
                 });
             });
+        }
+        return new Promise((res, rej) => {
+            if (!fs.existsSync(`${path}\\${type}s`)) {
+                fs.mkdir(`${path}\\${type}s`, (err) => {
+                    write(res, rej);
+                });
+            } else {
+                write(res, rej);
+            }
         });
     }
     async deleteServer(dir) {

@@ -67,7 +67,7 @@ class ServerData {
     }
     async uploadModifications(req, res : Response): Promise < void > {
         try {
-            await this.uploadModifications(req.params.dir, req.files.package);
+            res.json(await StaticData.writeModifications(req.params.dir, req.files, req.query.type));
         } catch(err) {
             res.json(err);
         }
