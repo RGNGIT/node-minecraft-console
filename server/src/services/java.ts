@@ -22,12 +22,12 @@ class Java {
         }
         process.chdir(`${
             singleton.root
-        }\\java\\${
+        }/java/${
             singleton.selectedServer
         }`);
         singleton.proc = spawn('java', [
             '-jar', `${
-                singleton.root.replaceAll('\\', '/')
+                singleton.root
             }/java/${
                 singleton.selectedServer
             }/server.jar`,

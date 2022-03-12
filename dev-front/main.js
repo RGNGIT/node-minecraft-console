@@ -67,7 +67,8 @@ const uploadTemplate = () => `<dir>
 <input type='file' id='spic'></input>
 <input type='file' id='smodify'></input>
 <button onclick='uploadServer()'>Выгрузить сборку</button>
-</dir>`;
+</dir>
+<hr color="black" noshade>`;
 
 async function getLog() {
     return await axios.get(server + 'api/log');
