@@ -32,7 +32,7 @@ ${
     mods != null ? enlistMods(mods) : 'Отсутствуют (Ванилла)'
 }</h3>
 <button value=${name} onclick='startServer(value)'>Запустить</button>
-<button value=${name} onclick='deleteServer(value)'>Удалить</button>
+<button value=${name} onclick='deleteServer(value)' disabled>Удалить</button>
 <input type='file' id='${name}-modify'></input>
 <button value=${name} onclick='addModifications(value, "plugin")'>Добавить пак модификаций</button>
 </div>`;
