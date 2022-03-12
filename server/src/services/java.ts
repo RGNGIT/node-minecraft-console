@@ -7,10 +7,12 @@ class Java {
         return new Promise((res, rej) => {
             proc.stderr.on('data', (data) => {
                 singleton.log.push(data.toString());
+                console.log(data);
                 rej(data);
             });
             proc.stdout.on('data', (data) => {
                 singleton.log.push(data.toString());
+                console.log(data);
                 res(data);
             });
         })
