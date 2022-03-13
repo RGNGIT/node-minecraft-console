@@ -114,7 +114,7 @@ async function showAvailable() {
     let list = await axios.get(server + `api/serverList`);
     canvas.innerHTML += uploadTemplate();
     if (list.data.length == 0) {
-        canvas.innerHTML += "<h2 style='text-align:center;' id='available-label'>Нет доступных сборок</h2>";
+        canvas.innerHTML += "<h2 style='text-align:center;'>Нет доступных сборок</h2>";
     }
     for (let i = 0; i < list.data.length; i++) {
         let image = await axios.get(server + `api/serverIcon/${
@@ -126,7 +126,7 @@ async function showAvailable() {
 }
 
 async function uploadServer() {
-    document.querySelector("#available-label").innerHTML = "Пагади, обрабатываю...";
+    canvas.innerHTML += "<h2 style='text-align:center;'>Падажжи, обрабатываю...</h2>";
     let fd = new FormData();
     let sfile = document.querySelector("#sfile");
     let pfile = document.querySelector("#spic");
