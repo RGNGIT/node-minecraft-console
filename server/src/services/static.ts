@@ -49,7 +49,7 @@ class StaticData {
                                 if(property.includes('motd')) {
                                     stream.write(`motd=${name}\n`);
                                 } else {
-                                    stream.write(property);
+                                    stream.write(`${property}\n`);
                                 }
                             }
                             stream.close();
