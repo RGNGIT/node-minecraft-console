@@ -5,8 +5,8 @@ window.getCookie = (name) => {
     }
 }
 
-//const server = "http://localhost:25566/";
-const server = "http://mc.19ivt.ru/";
+const server = "http://localhost:25566/";
+//const server = "http://mc.19ivt.ru/";
 const canvas = document.querySelector(`#main-canvas`);
 
 function enlistMods(mods) {

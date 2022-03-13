@@ -42,15 +42,28 @@ class StaticData {
                     });
                 });
                 let writeProperties = new Promise((res5, rej5) => {
+                    function streamParser(bigChunk, stream) {
+                        const linear = bigChunk.toString().split('\n');
+                        for(let property of linear) {
+                            if(property.includes('motd')) {
+                                stream.write(`motd=${name}\n`);
+                            } else {
+                                stream.write(property);
+                            }
+                        }
+                    }
                     let writeStream = fs.createWriteStream(`${path}/server.properties`);
                     let readStream = fs.createReadStream(`${singleton.root}/const/server.properties`);
-                    readStream.on('data', (chunk) => {
-                        writeStream.write(chunk);
+                    readStream.on('data', (bigChunk) => {
+                        streamParser(bigChunk, writeStream);
                     });
                     readStream.on('end', () => {
                         res5('OK');
                     });
                     readStream.on('error', (err) => {
+                        rej5(err);
+                    });
+                    writeStream.on('error', (err) => {
                         rej5(err);
                     });
                 });
