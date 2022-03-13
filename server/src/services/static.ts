@@ -14,6 +14,12 @@ class StaticData {
         const path = `${
             singleton.root
         }/java/${name}`;
+        function chunkEditor(chunk) {
+            if(chunk.includes('motd')) {
+                return `${chunk}=${name}`;
+            }
+            return chunk;
+        }
         return new Promise((res, rej) => {
             fs.mkdir(path, async () => {
                 let writeEula = new Promise((res1, rej1) => {
@@ -41,7 +47,20 @@ class StaticData {
                         err ? rej4(err) : res4('OK');
                     });
                 });
-                res(await Promise.allSettled([writeEula, writeIcon, writeMeta, writeServer]));
+                let writeProperties = new Promise((res5, rej5) => {
+                    let writeStream = fs.createWriteStream(`${path}/server.properties`);
+                    let readStream = fs.createReadStream(`${singleton.root}/const/server.properties`);
+                    readStream.on('data', (chunk) => {
+                        writeStream.write(chunkEditor(chunk));
+                    });
+                    readStream.on('end', () => {
+                        res5('OK');
+                    });
+                    readStream.on('error', (err) => {
+                        rej5(err);
+                    });
+                });
+                res(await Promise.allSettled([writeEula, writeIcon, writeMeta, writeServer, writeProperties]));
             });
         });
     }
