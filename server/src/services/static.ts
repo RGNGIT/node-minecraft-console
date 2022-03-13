@@ -14,12 +14,6 @@ class StaticData {
         const path = `${
             singleton.root
         }/java/${name}`;
-        function chunkEditor(chunk) {
-            if(chunk.includes('motd')) {
-                return `${chunk}=${name}`;
-            }
-            return chunk;
-        }
         return new Promise((res, rej) => {
             fs.mkdir(path, async () => {
                 let writeEula = new Promise((res1, rej1) => {
@@ -51,7 +45,7 @@ class StaticData {
                     let writeStream = fs.createWriteStream(`${path}/server.properties`);
                     let readStream = fs.createReadStream(`${singleton.root}/const/server.properties`);
                     readStream.on('data', (chunk) => {
-                        writeStream.write(chunkEditor(chunk));
+                        writeStream.write(chunk);
                     });
                     readStream.on('end', () => {
                         res5('OK');
