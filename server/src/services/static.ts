@@ -42,28 +42,31 @@ class StaticData {
                     });
                 });
                 let writeProperties = new Promise((res5, rej5) => {
-                    function streamParser(bigChunk, stream) {
-                        const linear = bigChunk.toString().split('\n');
-                        for(let property of linear) {
-                            if(property.includes('motd')) {
-                                stream.write(`motd=${name}\n`);
-                            } else {
-                                stream.write(property);
+                    async function streamParser(bigChunk, stream) {
+                        return new Promise((res6, rej6) => {
+                            const linear = bigChunk.toString().split('\n');
+                            for(let property of linear) {
+                                if(property.includes('motd')) {
+                                    stream.write(`motd=${name}\n`);
+                                } else {
+                                    stream.write(property);
+                                }
                             }
-                        }
+                            stream.close();
+                            stream.on('close', () => {
+                                res6('OK');
+                            });
+                            stream.on('error', (err) => {
+                                rej5(err);
+                            });
+                        });
                     }
                     let writeStream = fs.createWriteStream(`${path}/server.properties`);
                     let readStream = fs.createReadStream(`${singleton.root}/const/server.properties`);
-                    readStream.on('data', (bigChunk) => {
-                        streamParser(bigChunk, writeStream);
-                    });
-                    readStream.on('end', () => {
-                        res5('OK');
+                    readStream.on('data', async (bigChunk) => {
+                        res5(await streamParser(bigChunk, writeStream));
                     });
                     readStream.on('error', (err) => {
-                        rej5(err);
-                    });
-                    writeStream.on('error', (err) => {
                         rej5(err);
                     });
                 });
