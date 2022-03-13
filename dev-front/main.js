@@ -133,15 +133,12 @@ async function uploadServer() {
     let ver = document.querySelector("#server-version").value;
     fd.append("server", sfile.files[0]);
     fd.append("icon", pfile.files[0]);
+    canvas.innerHTML += "<h2 style='text-align:center;'>Падажжи, обрабатываю...</h2>";
     let res = await axios.post(server + `api/uploadServer/${name}?ver=${ver}&eula=true`, fd, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
     });
-    if(document.querySelector('#na') != null) {
-        canvas.innerHTML = '';
-    }
-    canvas.innerHTML += "<h2 style='text-align:center;'>Падажжи, обрабатываю...</h2>";
     await uploadModifications(name, 'plugin');
     res.data == 'OK' ? show('packages') : console.log("Error");
 }
