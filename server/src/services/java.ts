@@ -1,4 +1,4 @@
-import {spawn} from 'child_process';
+import {spawn} from 'async-child-process';
 import singleton from '../const/var';
 import process from 'process';
 
@@ -19,15 +19,15 @@ class Java {
     }
     async startProc() {
         if (singleton.proc != null) {
-            this.stopProc();
+            await this.stopProc();
             singleton.log = [];
         }
-        process.chdir(`${
+        await process.chdir(`${
             singleton.root
         }/java/${
             singleton.selectedServer
         }`);
-        singleton.proc = spawn('java', [
+        singleton.proc = await spawn('java', [
             '-jar', `${
                 singleton.root
             }/java/${
@@ -38,7 +38,8 @@ class Java {
         return await this.logger(singleton.proc);
     }
     async stopProc() {
-        singleton.proc.kill();
+        await singleton.proc.kill();
+        return 'OK';
     }
 }
 
