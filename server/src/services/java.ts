@@ -1,4 +1,4 @@
-import {spawn} from 'async-child-process';
+import {spawn} from 'child_process';
 import singleton from '../const/var';
 import process from 'process';
 
